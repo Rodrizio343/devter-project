@@ -6,12 +6,23 @@ import GitHub from "components/GitHub";
 import { colors } from "styles/theme";
 import { loginWithGitHub, onAuthStateChange } from "../firebase/client";
 import { Avatar } from "components/Avatar";
-export default function Home() {
-  const [userData, setUserData] = useState(null);
+import { useRouter } from "next/router";
 
+const USER_STATES = {
+  NOT_LOGGED: null,
+  NOT_KNOWN: undefined,
+};
+
+export default function Home() {
+  const [userData, setUserData] = useState(USER_STATES.NOT_KNOWN);
+  const router = useRouter();
   useEffect(() => {
     onAuthStateChange(setUserData);
   }, []);
+
+  useEffect(() => {
+    userData && router.replace("/Home");
+  }, [userData]);
 
   const handleClick = () => {
     loginWithGitHub()
@@ -32,12 +43,13 @@ export default function Home() {
           <img src="/logo.jpg" />
           <h1>Devter</h1>
           <h2>Talk about development with developers</h2>
-          {userData === null && (
+          {userData === USER_STATES.NOT_LOGGED && (
             <Button onClick={handleClick}>
               <GitHub fill="#fff" />
               Login with GitHub
             </Button>
           )}
+          {userData === USER_STATES.NOT_KNOWN && <p>Cargando...</p>}
           {userData && userData.avatar && (
             <Avatar
               src={userData.avatar}
