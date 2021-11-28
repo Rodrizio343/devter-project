@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import AppLayout from "../components/AppLayout";
 import Button from "../components/Button";
 import GitHub from "../components/GitHub";
 import { colors } from "../styles/theme";
-import { loginWithGitHub,onAuthStateChange } from "../firebase/client";
+import { loginWithGitHub, onAuthStateChange } from "../firebase/client";
 export default function Home() {
-
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    onAuthStateChange(setUserData)
-  }, [])
+    onAuthStateChange(setUserData);
+  }, []);
 
   const handleClick = () => {
     loginWithGitHub()
-      .then(user => setUserData(user))
-      .catch(err => console.log(err))
-  }
-  
+      .then((user) => setUserData(user))
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Head>
@@ -28,48 +26,46 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-    <AppLayout>
-      <section>
-        <img src="/logo.jpg" />
-        <h1>Devter</h1>
-        <h2>Talk about development with developers</h2>
-        {
-          userData === null && 
-          <Button onClick={handleClick}>
-            <GitHub fill="#fff"/>
-            Login with GitHub
-          </Button>
+      <AppLayout>
+        <section>
+          <img src="/logo.jpg" />
+          <h1>Devter</h1>
+          <h2>Talk about development with developers</h2>
+          {userData === null && (
+            <Button onClick={handleClick}>
+              <GitHub fill="#fff" />
+              Login with GitHub
+            </Button>
+          )}
+          {userData && userData.avatar && (
+            <div>
+              <img src={userData.avatar} alt={userData.email} />
+            </div>
+          )}
+        </section>
+      </AppLayout>
+      <style jsx>{`
+        section {
+          display: grid;
+          height: 100%;
+          place-content: center;
+          place-items: center;
         }
-        {
-          userData && userData.avatar &&
-          <div>
-            <img src={userData.avatar} alt={userData.email}/>
-          </div>
+        img {
+          width: 120px;
         }
-      </section>
-    </AppLayout>
-    <style jsx>{`
-      section{
-        display: grid;
-        height: 100%;
-        place-content: center;
-        place-items: center;
-      }
-      img{
-        width: 120px
-      }
-      h1{
-        color: ${colors.secondary};
-        font-weight: 800;
-        margin-bottom: 16px;
-      }
-      h2{
-        color: ${colors.primary};
-        font-size: 21px;
-        margin-bottom: 16px;
-        margin-top: 0;
-      }
-    `}</style>
-  </>
+        h1 {
+          color: ${colors.secondary};
+          font-weight: 800;
+          margin-bottom: 16px;
+        }
+        h2 {
+          color: ${colors.primary};
+          font-size: 21px;
+          margin-bottom: 16px;
+          margin-top: 0;
+        }
+      `}</style>
+    </>
   );
 }

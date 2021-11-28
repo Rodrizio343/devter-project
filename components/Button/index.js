@@ -1,14 +1,12 @@
-import React from 'react'
-import { colors } from '../../styles/theme'
+import React from "react";
+import { colors } from "../../styles/theme";
 
 const Button = ({ children, onClick }) => {
   return (
     <>
-      <button onClick={onClick}>
-        {children}
-      </button>
+      <button onClick={onClick}>{children}</button>
       <style jsx>{`
-        button{
+        button {
           align-items: center;
           background: ${colors.black};
           border-radius: 9999px;
@@ -18,17 +16,17 @@ const Button = ({ children, onClick }) => {
           display: flex;
           font-weight: 800;
           padding: 8px 24px;
-          transition: opacity .3s ease;
-        }  
-        button:hover{
-          opacity: .7;
+          transition: opacity 0.3s ease;
         }
-        button > :global(svg){
+        button:hover {
+          opacity: 0.7;
+        }
+        button > :global(svg) {
           margin-right: 8px;
         }
       `}</style>
     </>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

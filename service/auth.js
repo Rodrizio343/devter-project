@@ -1,5 +1,3 @@
-const socialMediaAuth = () => {
+const socialMediaAuth = () => {};
 
-}
-
-export default socialMediaAuth
+export default socialMediaAuth;
