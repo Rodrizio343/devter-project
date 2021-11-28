@@ -16,19 +16,24 @@ const fb = initializeApp(firebaseConfig);
 
 const githubProvider = new GithubAuthProvider()
 
-const auth = getAuth()
+const auth = getAuth();
+
+const mapUserFromFirebaseAuthToUser = (user) => {
+  const {email, photoURL} = user;
+  return {
+    avatar: photoURL,
+    username: email,
+  } 
+};
+
+export const onAuthStateChange = (onChange) => {
+  return auth.onAuthStateChanged(user => {
+    const normalizedUser = mapUserFromFirebaseAuthToUser(user);
+    console.log(normalizedUser)
+    onChange(normalizedUser);
+  })
+} 
 
 export const loginWithGitHub = () => {
-  signInWithPopup(auth, githubProvider)
-  .then((result) => {
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-
-    const user = result.user;
-  }).catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    const email = error.email;
-    const credential = GithubAuthProvider.credentialFromError(error);
-  });
+  return signInWithPopup(auth, githubProvider)
 }
