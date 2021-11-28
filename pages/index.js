@@ -1,33 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Head from "next/head";
 import AppLayout from "components/AppLayout";
 import Button from "components/Button";
 import GitHub from "components/GitHub";
 import { colors } from "styles/theme";
-import { loginWithGitHub, onAuthStateChange } from "../firebase/client";
+import { loginWithGitHub } from "../firebase/client";
 import { Avatar } from "components/Avatar";
 import { useRouter } from "next/router";
-
-const USER_STATES = {
-  NOT_LOGGED: null,
-  NOT_KNOWN: undefined,
-};
+import useUser, { USER_STATES } from "hooks/useUser";
 
 export default function Home() {
-  const [userData, setUserData] = useState(USER_STATES.NOT_KNOWN);
   const router = useRouter();
+  const user = useUser();
   useEffect(() => {
-    onAuthStateChange(setUserData);
-  }, []);
-
-  useEffect(() => {
-    userData && router.replace("/Home");
-  }, [userData]);
+    user && router.replace("/home");
+  }, [user]);
 
   const handleClick = () => {
-    loginWithGitHub()
-      .then((user) => setUserData(user))
-      .catch((err) => console.log(err));
+    loginWithGitHub().catch((err) => console.log(err));
   };
 
   return (
@@ -43,18 +33,18 @@ export default function Home() {
           <img src="/logo.jpg" />
           <h1>Devter</h1>
           <h2>Talk about development with developers</h2>
-          {userData === USER_STATES.NOT_LOGGED && (
+          {user === USER_STATES.NOT_LOGGED && (
             <Button onClick={handleClick}>
               <GitHub fill="#fff" />
               Login with GitHub
             </Button>
           )}
-          {userData === USER_STATES.NOT_KNOWN && <p>Cargando...</p>}
-          {userData && userData.avatar && (
+          {user === USER_STATES.NOT_KNOWN && <p>Cargando...</p>}
+          {user && user.avatar && (
             <Avatar
-              src={userData.avatar}
-              alt={userData.username}
-              text={userData.username}
+              src={user.avatar}
+              alt={user.username}
+              text={user.username}
               withText
             />
           )}

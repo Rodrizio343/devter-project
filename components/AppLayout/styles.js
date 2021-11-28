@@ -19,6 +19,10 @@ export const globalStyles = css.global`
   * {
     box-sizing: border-box;
   }
+  textara,
+  input {
+    font-family: ${fonts.base};
+  }
 `;
 
 export default css`
