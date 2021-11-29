@@ -1,10 +1,13 @@
 import { useState } from "react";
 import AppLayout from "components/AppLayout";
 import Button from "components/Button";
+import useUser from "hooks/useUser";
+import { addDevit } from "../../../firebase/client";
 
 const ComposeDevit = () => {
+  const user = useUser();
   const [message, setMessage] = useState("");
-
+  console.log(user);
   const handleChange = (event) => {
     const { value } = event.target;
     setMessage(value);
@@ -12,6 +15,12 @@ const ComposeDevit = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    addDevit({
+      avatar: user.avatar,
+      content: message,
+      userId: user.uid,
+      userName: user.username,
+    });
   };
   return (
     <>
